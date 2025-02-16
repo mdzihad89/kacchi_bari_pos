@@ -4,9 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kachi_bari_pos/features/home/presentation/bloc/home_bloc.dart';
 import 'package:kachi_bari_pos/service_locator.dart';
+import 'package:paged_datatable/l10n/generated/l10n.dart';
 import 'core/app/app_router.dart';
 import 'features/auth/presentation/bloc/bloc/auth_bloc.dart';
 import 'features/cart/presentation/bloc/cart_bloc.dart';
+import 'features/order/presentation/bloc/order_bloc.dart';
+
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,24 +35,26 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<AuthBloc>(
           create: (context)=>instance<AuthBloc>(),
-
         ),
-
         BlocProvider<HomeBloc>(
           create: (context)=>instance<HomeBloc>(),
         ),
-
-
         BlocProvider<CartBloc>(
           create: (context)=>instance<CartBloc>(),
         ),
+        BlocProvider<OrderBloc>(
+          create: (context)=>instance<OrderBloc>(),
+        ),
       ],
       child: MaterialApp.router(
+        localizationsDelegates: const [
+          PagedDataTableLocalization.delegate
+        ],
         routerConfig: AppRouter().router,
-        title: 'Flutter Demo',
+        title: 'Kacchi Bari',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple,brightness: Brightness.dark),
           useMaterial3: true,
           textTheme: TextTheme(
             displaySmall: GoogleFonts.inter(fontSize: 11,fontWeight: FontWeight.w500, color: Colors.white),

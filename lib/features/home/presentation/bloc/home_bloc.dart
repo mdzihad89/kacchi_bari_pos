@@ -19,7 +19,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         final categoryResult = await homeRepository.getCategoryData();
         final productResult = await homeRepository.getProductData();
         final branchResult = await homeRepository.getBranchData(branchId);
-
         categoryResult.fold(
               (failure) => emit(HomeError(failure.message, "Category API")),
               (categories) {

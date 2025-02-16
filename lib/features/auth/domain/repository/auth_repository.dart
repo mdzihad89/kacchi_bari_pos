@@ -8,5 +8,6 @@ abstract class AuthRepository {
   Future<Either<Failure, User>> signInWithEmailPassword(LoginRequestDto loginRequestDto);
   Future<Either<Failure, User>> getUserData();
   Future<bool> signOut();
+  Future<Either<Failure, String>> syncOrder();
 
 }

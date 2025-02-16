@@ -1,7 +1,6 @@
 
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:kachi_bari_pos/features/home/presentation/screen/home_screen.dart';
 import '../../features/auth/data/model/user_model.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/home/presentation/screen/main_screen.dart';

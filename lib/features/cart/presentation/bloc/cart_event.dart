@@ -2,11 +2,13 @@ import 'package:equatable/equatable.dart';
 import 'package:kachi_bari_pos/features/cart/data/model/order_model.dart';
 import 'package:kachi_bari_pos/features/home/data/model/product_model.dart';
 
-import '../../data/data_sources/local/isar/orders.dart';
+
 
 abstract class CartEvent extends Equatable {
   const CartEvent();
 }
+
+
 
 class AddToCart extends CartEvent {
   final ProductModel product;
@@ -46,6 +48,13 @@ class UpdateDiscount extends CartEvent {
   List<Object> get props => [discount];
 }
 
+class UpdateDeliveryFee extends CartEvent {
+  final int deliveryFee;
+  const UpdateDeliveryFee({required this.deliveryFee});
+  @override
+  List<Object> get props => [deliveryFee];
+}
+
 class UpdatePaidAmount extends CartEvent {
   final int paidAmount;
 
@@ -56,9 +65,11 @@ class UpdatePaidAmount extends CartEvent {
 }
 
 class PlaceOrder extends CartEvent {
-  final Orders orders;
-  const PlaceOrder({required this.orders});
+  final OrderModel orderModel;
+  const PlaceOrder({required this.orderModel});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [orderModel];
 }
+
+

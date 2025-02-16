@@ -65,13 +65,13 @@ class ErrorHandler implements Exception {
   }
 
   String _extractErrorMessage(dynamic data) {
-    if (data is String) return data; // Return if data is already a String
+    if (data is String) return data;
 
     if (data is Map && data.containsKey('message')) {
-      return data['message']; // Extract the message field directly
+      return data['message'];
     }
 
-    String message = ''; // Fallback for other structures
+    String message = '';
     if (data is Map) {
       data.forEach((key, value) {
         if (value is List) {

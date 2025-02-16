@@ -35,6 +35,13 @@ class AuthBloc extends Bloc<AuthEvent ,AuthState>{
             (user) => emit(Authenticated(user)),
       );
     });
+
+
+
+
+
+
+
   }
 
 

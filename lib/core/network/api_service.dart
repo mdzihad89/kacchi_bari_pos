@@ -54,45 +54,21 @@ class ApiService {
   //   }
   // }
 
-  //endregion
 
-
-  Future<FormData> createFormData(Map<String, dynamic> data) async {
-    final formData = FormData();
-    for (var entry in data.entries) {
-      if (entry.key == 'imageByte' && entry.value != null) {
-        log('imageByte: bloc');
-        formData.files.add(MapEntry(
-          'image',
-          MultipartFile.fromBytes(entry.value , filename: 'image.jpg'),
-        ));
-      } else {
-        formData.fields.add(MapEntry(entry.key, entry.value.toString()));
-      }
-    }
-    return formData;
-  }
 
 
   Future<Response> get({required String endPoint, dynamic params}) async {
     var response = await _dio.get('${AppConstant.baseUrl}$endPoint',  queryParameters: params);
     return response;
   }
-
   Future<Response> post({required String endPoint, dynamic data, dynamic params}) async {
     var response = await _dio.post('${AppConstant.baseUrl}$endPoint', data: data, queryParameters: params);
-    return response;
-  }
-  Future<Response> multiPartPost({required String endPoint, required Map<String, dynamic> data}) async {
-    FormData formData = await createFormData(data);
-    var response = await _dio.post('${AppConstant.baseUrl}$endPoint', data: formData);
     return response;
   }
   Future<Response> put({required String endPoint}) async {
     var response = await _dio.put('${AppConstant.baseUrl}$endPoint');
     return response;
   }
-
   Future<Response> delete({required String endPoint}) async {
     var response = await _dio.delete('${AppConstant.baseUrl}$endPoint');
     return response;

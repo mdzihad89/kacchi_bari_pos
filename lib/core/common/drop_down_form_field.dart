@@ -31,17 +31,20 @@ class _CDropdownFormFieldState extends State<CDropdownFormField> {
       dropdownColor: Colors.black,
       onChanged: widget.onChanged,
       decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: ColorConstants.primaryColor),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: ColorConstants.primaryColor),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          labelText: widget.label,
-          labelStyle: Theme.of(context).textTheme.bodyMedium,
-
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: ColorConstants.primaryColor),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: ColorConstants.primaryColor),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.red),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        labelText: widget.label,
+        labelStyle: Theme.of(context).textTheme.bodyMedium,
       ),
       validator: widget.validator,
     );

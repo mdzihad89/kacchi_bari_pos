@@ -36,7 +36,6 @@ class AuthRepositoryImpl extends AuthRepository{
         return Left(Failure(ResponseCode.forbidden, "Only managers are allowed to sign in."));
       }
     }catch(error){
-      log(error.toString());
       return Left(ErrorHandler.handle(error).failure);
     }
   }
@@ -65,5 +64,30 @@ class AuthRepositoryImpl extends AuthRepository{
 
    }
   }
+
+  @override
+  Future<Either<Failure, String>>  syncOrder() async{
+    try{
+      final unSyncOrder =await _localDataSource.getAllUnsyncOrder();
+
+      if(unSyncOrder.isNotEmpty){
+        final List<Map<String, dynamic>> ordersJson = unSyncOrder.map((order) => order.toMap()).toList();
+        final response = await _apiService.post(
+          endPoint: "order/sync-order",
+          data: jsonEncode(ordersJson),
+        );
+        if(response.statusCode==200){
+          await _localDataSource.deleteOfflineOrder();
+          return  const Right( 'Order synced successfully');
+        }
+      }
+      return const Right('No order to sync');
+    }catch(error){
+
+      return  Left(ErrorHandler.handle(error).failure) ;
+    }
+  }
+
+
 
 }

@@ -7,7 +7,8 @@ class CTextFormField extends StatefulWidget {
   final String validatorText;
   final TextEditingController textEditingController;
   final ValueChanged<String>? onChanged;
-  const CTextFormField({super.key, required this.labelText, required this.validatorText, required this.textEditingController,this.onChanged});
+  final VoidCallback? onTap;
+  const CTextFormField({super.key, required this.labelText, required this.validatorText, required this.textEditingController,this.onChanged, this.onTap});
 
   @override
   State<CTextFormField> createState() => _CTextFormFieldState();
@@ -19,8 +20,8 @@ class _CTextFormFieldState extends State<CTextFormField> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15.0),
       child: TextFormField(
-
         maxLines: 1,
+        onTap: widget.onTap ,
         controller:widget.textEditingController,
         style: Theme.of(context).textTheme.bodyMedium,
         decoration: InputDecoration(

@@ -1,20 +1,22 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/printer/printer_service.dart';
 import '../../data/model/cart_model.dart';
 import '../../domain/repository/cart_repository.dart';
 import 'cart_event.dart';
 import 'cart_state.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
-
   final CartRepository cartRepository;
+  final PrintingService printingService;
 
-  CartBloc({required this.cartRepository}) : super(const CartState()) {
+  CartBloc({required this.cartRepository, required this.printingService}) : super(const CartState()) {
     on<AddToCart>(_onAddToCart);
     on<RemoveFromCart>(_onRemoveFromCart);
     on<UpdateQuantity>(_onUpdateQuantity);
     on<UpdateDiscount>(_onUpdateDiscount);
     on<UpdatePaidAmount>(_onUpdatePaidAmount);
     on<PlaceOrder>(_onPlaceOrder);
+    on<UpdateDeliveryFee>(_onUpdateDeliveryFee); // Register the new event handler
   }
 
   void _onAddToCart(AddToCart event, Emitter<CartState> emit) {
@@ -36,14 +38,14 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       ));
     }
 
-    final subtotal = updatedCart.fold(0, (sum, item) => sum + item.price);
+    final subtotal = updatedCart.fold(0, (sum, item) => sum + item.price) + state.deliveryFee;
     final changeAmount = state.paidAmount - (subtotal - state.discount);
     emit(state.copyWith(cartItems: updatedCart, subtotal: subtotal, changeAmount: changeAmount));
   }
 
   void _onRemoveFromCart(RemoveFromCart event, Emitter<CartState> emit) {
     final updatedCart = state.cartItems.where((item) => item.productID != event.productID).toList();
-    final subtotal = updatedCart.fold(0, (sum, item) => sum + item.price);
+    final subtotal = updatedCart.fold(0, (sum, item) => sum + item.price) + state.deliveryFee;
     final changeAmount = state.paidAmount - (subtotal - state.discount);
     emit(state.copyWith(cartItems: updatedCart, subtotal: subtotal, changeAmount: changeAmount));
   }
@@ -57,7 +59,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       return item;
     }).toList();
 
-    final subtotal = updatedCart.fold(0, (sum, item) => sum + item.price);
+    final subtotal = updatedCart.fold(0, (sum, item) => sum + item.price) + state.deliveryFee;
     final changeAmount = state.paidAmount - (subtotal - state.discount);
     emit(state.copyWith(cartItems: updatedCart, subtotal: subtotal, changeAmount: changeAmount));
   }
@@ -80,15 +82,23 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     emit(state.copyWith(paidAmount: paidAmount, changeAmount: changeAmount));
   }
 
-  void _onPlaceOrder(PlaceOrder event, Emitter<CartState> emit) async{
-    final orders = event.orders;
-    final result= await cartRepository.addOrderLocalDatabase(orders);
+  void _onPlaceOrder(PlaceOrder event, Emitter<CartState> emit) async {
+    final orderModel = event.orderModel;
+    emit(state.copyWith(cartLoading: true));
+    final result = await cartRepository.addOrder(orderModel);
     result.fold(
-      (failure) => emit(state.copyWith(errorMessage: failure.message)),
-      (unit) => emit( state.copyWith(cartItems: [], subtotal: 0, discount: 0, paidAmount: 0, changeAmount: 0))
+            (failure) => emit(state.copyWith(errorMessage: failure.message, cartLoading: false)),
+            (string) async {
+          emit(state.copyWith(cartItems: [], subtotal: 0, discount: 0, paidAmount: 0, changeAmount: 0,deliveryFee: 0, cartLoading: false));
+          await printingService.printOrder(orderModel);
+        }
     );
+  }
 
-
-
+  void _onUpdateDeliveryFee(UpdateDeliveryFee event, Emitter<CartState> emit) {
+    final deliveryFee = event.deliveryFee;
+    final subtotal = state.cartItems.fold(0, (sum, item) => sum + item.price) + deliveryFee;
+    final changeAmount = state.paidAmount - (subtotal - state.discount);
+    emit(state.copyWith(deliveryFee: deliveryFee, subtotal: subtotal, changeAmount: changeAmount));
   }
 }

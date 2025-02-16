@@ -23,16 +23,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController emailController = TextEditingController(
-    text: "toru@gmail.com"
-  );
-  final TextEditingController passController = TextEditingController(
-    text: "34413357"
-  );
-
-
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passController = TextEditingController();
   bool passwordVisible = false;
-
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
 
@@ -111,7 +104,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                       fit: BoxFit.cover,
                       errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                        log(exception.toString());
                         return const Text('😢');
                       },
                     ),
