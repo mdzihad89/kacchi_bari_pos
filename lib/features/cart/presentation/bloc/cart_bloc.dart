@@ -16,7 +16,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<UpdateDiscount>(_onUpdateDiscount);
     on<UpdatePaidAmount>(_onUpdatePaidAmount);
     on<PlaceOrder>(_onPlaceOrder);
-    on<UpdateDeliveryFee>(_onUpdateDeliveryFee); // Register the new event handler
+    on<UpdateDeliveryFee>(_onUpdateDeliveryFee);
   }
 
   void _onAddToCart(AddToCart event, Emitter<CartState> emit) {
@@ -37,7 +37,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         quantity: 1,
       ));
     }
-
     final subtotal = updatedCart.fold(0, (sum, item) => sum + item.price) + state.deliveryFee;
     final changeAmount = state.paidAmount - (subtotal - state.discount);
     emit(state.copyWith(cartItems: updatedCart, subtotal: subtotal, changeAmount: changeAmount));
@@ -50,7 +49,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     emit(state.copyWith(cartItems: updatedCart, subtotal: subtotal, changeAmount: changeAmount));
   }
 
-  void _onUpdateQuantity(UpdateQuantity event, Emitter<CartState> emit) {
+  void _onUpdateQuantity(UpdateQuantity event, Emitter<CartState> emit)
+   {
     final updatedCart = state.cartItems.map((item) {
       if (item.productID == event.productID) {
         item.quantity = event.quantity;

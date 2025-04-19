@@ -60,8 +60,9 @@ dependencies:
   intl:
   paged_datatable:
     path: ./paged_datatable
-  audioplayers: ^6.1.0
   math_expressions: ^2.6.0
+  flutter_slidable: ^4.0.0
+  flutter_window_close: ^1.2.0
 
 
 dev_dependencies:

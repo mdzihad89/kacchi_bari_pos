@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,24 +36,21 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
   Timer? timer;
   final _searchSubject = BehaviorSubject<String>();
   StreamSubscription<String>? _searchSubscription;
-
   List<String> orderTypes = ["Dine In", "Take Away", "Delivery", "Pre Order"];
   List<String> paymentModes = ["Cash", "Bkash", "Nagad"];
-
   String? orderTypeSelectedValue;
   String? tableNumberSelectedValue;
   String? paymentModeSelectValue = "Cash";
   final TextEditingController paidAmountController = TextEditingController();
   final TextEditingController discountController = TextEditingController();
-  final TextEditingController customerNumberController =
-  TextEditingController();
-  final TextEditingController deliveryAddressController =
-  TextEditingController();
+  final TextEditingController customerNumberController = TextEditingController();
+  final TextEditingController deliveryAddressController = TextEditingController();
   final TextEditingController customerNameController = TextEditingController();
   final TextEditingController noteController = TextEditingController();
   final TextEditingController deliveryDateAndTime = TextEditingController();
   final TextEditingController deliveryBoyNameController = TextEditingController();
   final TextEditingController deliveryFeeController = TextEditingController();
+  final TextEditingController takeawayNoteController = TextEditingController();
 
   String generateInvoiceNumber() {
     final now = DateTime.now();
@@ -65,12 +61,10 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
     return invoiceNumber.toString().padLeft(8, '0');
   }
 
-  late AudioPlayer player = AudioPlayer();
+
 
   @override
   void initState() {
-    player = AudioPlayer();
-
     context.read<HomeBloc>().add(GetHomeEvent());
     _searchSubscription = _searchSubject
         .debounceTime(const Duration(milliseconds: 300))
@@ -79,7 +73,6 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
         _selectedIndex = null;
       });
     });
-
     super.initState();
   }
 
@@ -88,7 +81,6 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
     _searchController.dispose();
     _searchSubject.close();
     _searchSubscription?.cancel();
-    player.dispose();
     timer?.cancel();
     super.dispose();
   }
@@ -311,7 +303,6 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                                   itemBuilder: (context, index) {
                                     return ProductItem(
                                       product: filteredProducts[index],
-                                      audioPlayer: player,
                                     );
                                   },
                                 );
@@ -449,6 +440,14 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                       height: 10,
                     )
                         : const SizedBox.shrink(),
+                    orderTypeSelectedValue=="Take Away" ? Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: CTextFormField(
+                        labelText: "Note",
+                        validatorText: "Please enter note",
+                        textEditingController: takeawayNoteController,
+                      ),
+                    ) : const SizedBox.shrink(),
                     orderTypeSelectedValue == "Dine In"
                         ? CDropdownFormField<String>(
                       value: tableNumberSelectedValue,
@@ -479,8 +478,7 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                       ),
                       label: "Select Table Number",
                     )
-                        : orderTypeSelectedValue == "Delivery" ||
-                        orderTypeSelectedValue == "Pre Order"
+                        : orderTypeSelectedValue == "Delivery" || orderTypeSelectedValue == "Pre Order"
                         ? CTextFormField(
                       labelText: "Delivery Address",
                       validatorText: "Please enter delivery address",
@@ -639,10 +637,7 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                               child: CircularProgressIndicator(),
                             );
                           }
-                          final homeLoadedState =
-                          context
-                              .read<HomeBloc>()
-                              .state as HomeLoaded;
+                          final homeLoadedState = context.read<HomeBloc>().state as HomeLoaded;
                           return Column(
                             children: [
                               Table(
@@ -1017,12 +1012,8 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                                                 ),
                                               ),
                                               onChanged: (value) {
-                                                final paidAmount =
-                                                    int.tryParse(value) ?? 0;
-                                                context.read<CartBloc>().add(
-                                                    UpdatePaidAmount(
-                                                        paidAmount:
-                                                        paidAmount));
+                                                final paidAmount = int.tryParse(value) ?? 0;
+                                                context.read<CartBloc>().add(UpdatePaidAmount(paidAmount: paidAmount));
                                               },
                                             ),
                                           ),
@@ -1162,26 +1153,19 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                                           homeLoadedState.branchModel.id,
                                           branchName:
                                           homeLoadedState.branchModel.name,
-                                          managerId: homeLoadedState
-                                              .branchModel.managerId,
-                                          managerName: homeLoadedState
-                                              .branchModel.managerName,
-                                          branchPhoneNumber: homeLoadedState
-                                              .branchModel.branchPhoneNumber,
-                                          branchAddress: homeLoadedState
-                                              .branchModel.address,
+                                          managerId: homeLoadedState.branchModel.managerId,
+                                          managerName: homeLoadedState.branchModel.managerName,
+                                          branchPhoneNumber: homeLoadedState.branchModel.branchPhoneNumber,
+                                          branchAddress: homeLoadedState.branchModel.address,
                                           paymentMode: paymentModeSelectValue!,
                                           paymentStatus: "Done",
-                                          serialNumber:
-                                          await instance<AppPreferences>()
-                                              .getSerialNumber(),
-                                          branchBinNumber: homeLoadedState
-                                              .branchModel.branchBinNumber,
+                                          serialNumber: await instance<AppPreferences>().getSerialNumber(),
+                                          branchBinNumber: homeLoadedState.branchModel.branchBinNumber,
                                           invoiceNumber: generateInvoiceNumber(),
                                           deliveryAddress: "",
                                           customerName: "",
                                           deliveryDateAndTime: "",
-                                          note: "",
+                                          note: takeawayNoteController.text.isNotEmpty? takeawayNoteController.text : "",
                                           orderStatus: "Done",
                                           deliveryFee: 0,
                                           deliveryBoyName: "",
@@ -1191,6 +1175,7 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                                       paidAmountController.clear();
                                       discountController.clear();
                                       customerNumberController.clear();
+                                      takeawayNoteController.clear();
                                     }
                                   } else if (orderTypeSelectedValue ==
                                       "Delivery") {

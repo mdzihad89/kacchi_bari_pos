@@ -4,6 +4,7 @@ import 'package:elegant_notification/elegant_notification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_window_close/flutter_window_close.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/constants/app_constant.dart';
 import '../../../../core/constants/asset_constants.dart';
@@ -33,6 +34,23 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     passwordVisible = true;
+    FlutterWindowClose.setWindowShouldCloseHandler(() async {
+      return await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+                title: const Text('Do you really want to quit?'),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      child: const Text('Yes')),
+                  TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: const Text('No')),
+                ]);
+          });
+    });
+
   }
 
   @override

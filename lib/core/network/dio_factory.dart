@@ -26,13 +26,13 @@ class DioFactory {
     );
 
     if (!kReleaseMode) {
-      // dio.interceptors.add(PrettyDioLogger(
-      //   requestHeader: false,
-      //   requestBody: false,
-      //   responseHeader: false,
-      //   responseBody: false,
-      //   request: false
-      // ));
+      dio.interceptors.add(PrettyDioLogger(
+        requestHeader: true,
+        requestBody: true,
+        responseHeader: true,
+        responseBody: true,
+        request: true
+      ));
     }
 
     return dio;

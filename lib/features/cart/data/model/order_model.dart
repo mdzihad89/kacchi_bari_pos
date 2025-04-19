@@ -31,6 +31,7 @@ class OrderModel {
   String orderStatus;
   int deliveryFee;
   String deliveryBoyName;
+  bool? isOnlyPrint;
   OrderModel({
     required this.cartItems,
     required this.subtotalAmount,
@@ -60,6 +61,7 @@ class OrderModel {
     required this.orderStatus ,
     required this.deliveryFee,
     required this.deliveryBoyName,
+    this.isOnlyPrint
   });
 
 

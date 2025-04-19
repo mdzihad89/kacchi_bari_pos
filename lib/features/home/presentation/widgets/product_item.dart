@@ -1,4 +1,4 @@
-import 'package:audioplayers/audioplayers.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,9 +10,9 @@ import '../../data/model/product_model.dart';
 
 class ProductItem extends StatelessWidget {
   final ProductModel product;
-  final AudioPlayer audioPlayer ;
 
- const  ProductItem({super.key, required this.product, required this.audioPlayer});
+
+ const  ProductItem({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +65,6 @@ class ProductItem extends StatelessWidget {
              );
            }else{
              context.read<CartBloc>().add(AddToCart(product: product));
-             await audioPlayer.play(AssetSource("audio/beep.mp3"));
            }
 
           },

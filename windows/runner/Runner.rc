@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.kacchibari" "\0"
-            VALUE "FileDescription", "Kacchi Bari" "\0"
+            VALUE "FileDescription", "Kacchi Bari POS Application " "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "Kacchi Bari" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2024 com.kacchibari. All rights reserved." "\0"
-            VALUE "OriginalFilename", "Kacchi Bari.exe" "\0"
-            VALUE "ProductName", "Kacchi Bari" "\0"
+            VALUE "InternalName", "Kacchi Bari POS" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2025 com.kacchibari. All rights reserved." "\0"
+            VALUE "OriginalFilename", "kachi_bari_pos.exe" "\0"
+            VALUE "ProductName", "Kacchi Bari POS" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

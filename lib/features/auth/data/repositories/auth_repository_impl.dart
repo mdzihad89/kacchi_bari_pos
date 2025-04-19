@@ -50,18 +50,16 @@ class AuthRepositoryImpl extends AuthRepository{
   @override
   Future<Either<Failure, User>> getUserData() async{
    try{
-     final response= await _apiService.get(endPoint: "user/get-user-data");
-     final data = userFromJson(jsonEncode(response.data));
-     return Right(data);
-   }catch(error){
-     try{
-        final data = await _localDataSource.getUserModel();
+     final data = await _localDataSource.getUserModel();
+     if(data==null){
+       final response= await _apiService.get(endPoint: "user/get-user-data");
+       final data = userFromJson(jsonEncode(response.data));
+       return Right(data);
+     }else{
         return Right(data);
-
-     }catch(e){
-       return Left(ErrorHandler.handle(error).failure);
      }
-
+   }catch(error){
+     return Left(ErrorHandler.handle(error).failure);
    }
   }
 

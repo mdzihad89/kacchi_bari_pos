@@ -65,8 +65,8 @@ class ApiService {
     var response = await _dio.post('${AppConstant.baseUrl}$endPoint', data: data, queryParameters: params);
     return response;
   }
-  Future<Response> put({required String endPoint}) async {
-    var response = await _dio.put('${AppConstant.baseUrl}$endPoint');
+  Future<Response> put({required String endPoint,dynamic data}) async {
+    var response = await _dio.put('${AppConstant.baseUrl}$endPoint',data: data);
     return response;
   }
   Future<Response> delete({required String endPoint}) async {

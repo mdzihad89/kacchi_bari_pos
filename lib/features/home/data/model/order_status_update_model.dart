@@ -1,6 +1,5 @@
 class OrderStatusUpdateModel {
   String orderStatus;
-
   String id;
 
   OrderStatusUpdateModel({
@@ -15,5 +14,22 @@ class OrderStatusUpdateModel {
       "id": id,
     };
   }
+}
 
+class OrderStatusUpdateModelOffline{
+  String orderStatus;
+  String invoiceNumber;
+
+  OrderStatusUpdateModelOffline({
+    required this.orderStatus,
+
+    required this.invoiceNumber,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      "orderStatus": orderStatus,
+      "invoiceNumber": invoiceNumber,
+    };
+  }
 }

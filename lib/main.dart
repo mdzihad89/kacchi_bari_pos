@@ -8,6 +8,7 @@ import 'package:paged_datatable/l10n/generated/l10n.dart';
 import 'core/app/app_router.dart';
 import 'features/auth/presentation/bloc/bloc/auth_bloc.dart';
 import 'features/cart/presentation/bloc/cart_bloc.dart';
+import 'features/contact/presentation/bloc/contact_bloc/contact_bloc.dart';
 import 'features/order/presentation/bloc/order_bloc.dart';
 
 
@@ -45,6 +46,10 @@ class MyApp extends StatelessWidget {
         BlocProvider<OrderBloc>(
           create: (context)=>instance<OrderBloc>(),
         ),
+        BlocProvider<ContactBloc>(
+          create: (context)=>instance<ContactBloc>(),
+        ),
+
       ],
       child: MaterialApp.router(
         localizationsDelegates: const [

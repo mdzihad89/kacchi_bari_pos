@@ -9,6 +9,8 @@ class OrderFilter{
   final String? invoiceNumber;
   final String? customerPhoneNumber;
   final String? pageToken;
+  final String? serialNumber;
+  final String? orderType;
 
   OrderFilter({
     required this.branchId,
@@ -21,6 +23,8 @@ class OrderFilter{
     this.invoiceNumber,
     this.customerPhoneNumber,
     this.pageToken,
+    this.serialNumber,
+    this.orderType,
   });
 
   Map<String,dynamic> toQueryParams(){
@@ -35,6 +39,8 @@ class OrderFilter{
       if(invoiceNumber != null) 'invoiceNumber': invoiceNumber,
       if(customerPhoneNumber != null) 'customerPhoneNumber': customerPhoneNumber,
       if(pageToken != null) 'pageToken': pageToken,
+      if(serialNumber != null) 'serialNumber': serialNumber,
+      if(orderType != null) 'orderType': orderType,
     };
   }
 

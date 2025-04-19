@@ -12,19 +12,19 @@ import 'model/order_model_isar.dart';
 abstract class LocalDataSource{
   Future<bool> initDb();
   Future<Unit> saveUserModel(User user);
-  Future<User> getUserModel();
+  Future<User?> getUserModel();
   Future<Unit> deleteUserModel();
   Future<Unit> saveAllCategories(List<CategoryModel> categories);
   Future<List<CategoryModel>> getAllCategories();
   Future<Unit> saveAllProducts(List<ProductModel> products);
   Future<List<ProductModel>> getAllProducts();
   Future<Unit> saveBranch(BranchModel branches);
-  Future<BranchModel> getBranch();
+  Future<BranchModel?> getBranch();
   Future<Unit> addOfflineOrder(OrderModel orderModel);
   Future<OfflineOrderResponse> getOfflineAllOrder(OrderFilter orderFilter);
   Future<Unit> deleteOfflineOrder();
   Future<List<OrderModel>> getAllUnsyncOrder();
-  Future<OrderModel> updateOrderPayment(DineInPaymentModel dineInPaymentModel);
+  Future<OrderModel> updateOrderPayment(dynamic paymentModel,String orderType);
 
 
 

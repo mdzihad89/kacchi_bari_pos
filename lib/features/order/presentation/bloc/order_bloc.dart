@@ -11,7 +11,6 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   OrderBloc({required this.orderRepository}) : super(const OrderInitial()){
     on<GetAllOrderEvent>(_onGetAllOrder);
     on<GetUnsyncOrderEvent>(_onGetUnsyncOrderEvent);
-
   }
 
   void _onGetAllOrder(GetAllOrderEvent event, Emitter<OrderState> emit) async {

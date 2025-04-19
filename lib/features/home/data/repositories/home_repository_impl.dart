@@ -19,59 +19,70 @@ class HomeRepositoryImpl extends HomeRepository{
   Future<Either<Failure,List<CategoryModel>>> getCategoryData() async{
 
     try{
-      final response = await _apiService.get(endPoint: "category/get-all-category");
-      final List<dynamic> jsonData = response.data;
-      final data = jsonData.map((item) => CategoryModel.fromJson(item)).toList();
-      await _localDataSource.saveAllCategories(data);
-      return Right(data);
-    }catch(error){
-      try{
-        final data = await _localDataSource.getAllCategories();
+      final data = await _localDataSource.getAllCategories();
+      if(data.isEmpty){
+        final response = await _apiService.get(endPoint: "category/get-all-category");
+        final List<dynamic> jsonData = response.data;
+        final data = jsonData.map((item) => CategoryModel.fromJson(item)).toList();
+        await _localDataSource.saveAllCategories(data);
         return Right(data);
-      }catch(error){
-
-        return Left(ErrorHandler.handle(error).failure);
+      }else{
+        return Right(data);
       }
-
+    }catch(error){
+      // try{
+      //   final data = await _localDataSource.getAllCategories();
+      //   return Right(data);
+      // }catch(error){
+      //   return Left(ErrorHandler.handle(error).failure);
+      // }
+      return Left(ErrorHandler.handle(error).failure);
     }
   }
 
   @override
   Future<Either<Failure, List<ProductModel>>> getProductData() async{
     try{
-      final response = await _apiService.get(endPoint: "food/get-all-foods");
-      final List<dynamic> jsonData = response.data;
-      final data = jsonData.map((item) => ProductModel.fromJson(item)).toList();
-      await _localDataSource.saveAllProducts(data);
-      return Right(data);
-    }catch(error){
+      final data = await _localDataSource.getAllProducts();
 
-      try{
-        final data = await _localDataSource.getAllProducts();
+      log(data.toString());
+      if(data.isEmpty){
+        final response = await _apiService.get(endPoint: "food/get-all-foods");
+        final List<dynamic> jsonData = response.data;
+        final data = jsonData.map((item) => ProductModel.fromJson(item)).toList();
+        await _localDataSource.saveAllProducts(data);
         return Right(data);
-
-      }catch(error){
-        return Left(ErrorHandler.handle(error).failure);
+      }else{
+        return Right(data);
       }
-
+    }catch(error){
+      //
+      // try{
+      //   final data = await _localDataSource.getAllProducts();
+      //   return Right(data);
+      //
+      // }catch(error){
+      //   return Left(ErrorHandler.handle(error).failure);
+      // }
+      return Left(ErrorHandler.handle(error).failure);
     }
   }
 
   @override
   Future<Either<Failure, BranchModel>> getBranchData(String branchId) async{
     try{
-      final response = await _apiService.get(endPoint: "branch/$branchId");
-      final data = BranchModel.fromJson(response.data);
-      await _localDataSource.saveBranch(data);
-      return Right(data);
-    }catch(error){
-     try{
-        final data = await _localDataSource.getBranch();
+      final data = await _localDataSource.getBranch();
+      if(data==null){
+        final response = await _apiService.get(endPoint: "branch/$branchId");
+        final data = BranchModel.fromJson(response.data);
+        await _localDataSource.saveBranch(data);
         return Right(data);
+      }else{
+        return Right(data);
+      }
 
-     }catch(error){
-       return Left(ErrorHandler.handle(error).failure);
-     }
+    }catch(error){
+      return Left(ErrorHandler.handle(error).failure);
     }
   }
 

@@ -54,6 +54,11 @@ class ProductModel {
     "type": type,
     "variations": List<dynamic>.from(variations.map((x) => x.toJson())),
   };
+
+  @override
+  String toString() {
+    return 'ProductModel{id: $id, name: $name, image: $image, status: $status, slug: $slug, price: $price, categoryId: $categoryId, categoryName: $categoryName, type: $type, variations: $variations}';
+  }
 }
 
 class Variation {
@@ -78,6 +83,11 @@ class Variation {
     "price": price,
     "_id": id,
   };
+
+  @override
+  String toString() {
+    return 'Variation{personCount: $personCount, price: $price, id: $id}';
+  }
 }
 
 

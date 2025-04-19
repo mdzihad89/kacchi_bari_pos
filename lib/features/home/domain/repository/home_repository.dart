@@ -9,6 +9,4 @@ abstract class HomeRepository{
   Future<Either<Failure, List<CategoryModel>>> getCategoryData();
   Future<Either<Failure, List<ProductModel>>> getProductData();
   Future<Either<Failure, BranchModel>> getBranchData(String branchId);
-
-
 }

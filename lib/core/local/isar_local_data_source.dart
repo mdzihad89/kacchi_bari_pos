@@ -69,7 +69,7 @@ class IsarLocalDataSource extends LocalDataSource {
   }
 
   @override
-  Future<User> getUserModel() async {
+  Future<User?> getUserModel() async {
     try {
       final userModelIsar = await isar.userModelIsars.where().findFirst();
       if (userModelIsar != null) {
@@ -86,10 +86,10 @@ class IsarLocalDataSource extends LocalDataSource {
           token: userModelIsar.token,
         );
       } else {
-        throw Exception("No user found");
+        return null;
       }
     } catch (e) {
-      rethrow;
+      return null;
     }
   }
 
@@ -213,7 +213,7 @@ class IsarLocalDataSource extends LocalDataSource {
   }
 
   @override
-  Future<BranchModel> getBranch() async {
+  Future<BranchModel?> getBranch() async {
     try {
       final branchModelIsar = isar.branchModelIsars.where().findAllSync();
 
@@ -232,10 +232,10 @@ class IsarLocalDataSource extends LocalDataSource {
           table: branch.table,
         );
       } else {
-        throw Exception("No branch found");
+        return null;
       }
     } catch (e) {
-      rethrow;
+      return null;
     }
   }
 
@@ -574,26 +574,52 @@ class IsarLocalDataSource extends LocalDataSource {
   }
 
   @override
-  Future<OrderModel> updateOrderPayment(DineInPaymentModel dineInPaymentModel) async {
+  Future<OrderModel> updateOrderPayment(dynamic paymentModel, String orderType) async {
     try {
       OrderModelIsar? updatedOrder;
       await isar.writeTxn(() async {
         final order = await isar.orderModelIsars
             .filter()
-            .invoiceNumberEqualTo(dineInPaymentModel.invoiceNumber)
+            .invoiceNumberEqualTo(paymentModel.invoiceNumber)
             .findFirst();
 
-        if (order != null) {
-          order.paymentStatus = dineInPaymentModel.paymentStatus;
-          order.paymentMode = dineInPaymentModel.paymentMode;
-          order.customerPhoneNumber = dineInPaymentModel.customerPhoneNumber;
-          order.discountAmount = dineInPaymentModel.discountAmount;
-          order.paidAmount = dineInPaymentModel.paidAmount;
-          order.netPayableAmount = dineInPaymentModel.netPayableAmount;
-          order.changeAmount = dineInPaymentModel.changeAmount;
+        if (order != null && orderType == "Dine In") {
+          order.paymentStatus = paymentModel.paymentStatus;
+          order.paymentMode = paymentModel.paymentMode;
+          order.customerPhoneNumber = paymentModel.customerPhoneNumber;
+          order.discountAmount = paymentModel.discountAmount;
+          order.paidAmount = paymentModel.paidAmount;
+          order.netPayableAmount = paymentModel.netPayableAmount;
+          order.changeAmount = paymentModel.changeAmount;
           await isar.orderModelIsars.put(order);
           updatedOrder = order;
         }
+
+        if (order != null && orderType == "Delivery") {
+          order.paymentStatus = paymentModel.paymentStatus;
+          order.paymentMode = paymentModel.paymentMode;
+          order.changeAmount = paymentModel.changeAmount;
+          order.paidAmount=paymentModel.paidAmount;
+          await isar.orderModelIsars.put(order);
+          updatedOrder = order;
+        }
+
+        if (order != null && orderType == "Pre Order") {
+          order.paymentStatus = paymentModel.paymentStatus;
+          order.paymentMode = paymentModel.paymentMode;
+          order.discountAmount=paymentModel.discountAmount;
+          order.changeAmount = paymentModel.changeAmount;
+          order.paidAmount=paymentModel.paidAmount;
+          order.netPayableAmount=paymentModel.netPayableAmount;
+          await isar.orderModelIsars.put(order);
+          updatedOrder = order;
+        }
+        if (order != null && orderType == "PreOrderStatus") {
+          order.orderStatus = paymentModel.orderStatus;
+          await isar.orderModelIsars.put(order);
+          updatedOrder = order;
+        }
+
       });
 
       if (updatedOrder != null) {

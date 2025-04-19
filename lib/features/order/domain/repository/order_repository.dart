@@ -11,7 +11,7 @@ abstract class OrderRepository{
 
   Future<Either<Failure,OrderResponse>> getAllOrder( OrderFilter orderFilter);
   Future<Either<Failure, OfflineOrderResponse>> getAllUnsyncOrder(OrderFilter orderFilter);
-  Future<Either<Failure, OrderModel>> updateOrder(DineInPaymentModel dineInPaymentModel);
+  Future<Either<Failure, OrderModel>> updateOrder(dynamic paymentOrderModel , String orderType);
   Future<Either<Failure, OrderModel>> updatePendingOrderOnline(DineInPaymentModelOnline dineInPaymentModelOnline);
 
 

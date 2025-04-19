@@ -38,9 +38,9 @@ class OrderRepositoryImpl extends OrderRepository{
   }
 
   @override
-  Future<Either<Failure, OrderModel>> updateOrder(DineInPaymentModel dineInPaymentModel)async {
+  Future<Either<Failure, OrderModel>> updateOrder(dynamic paymentOrderModel , String orderType)async {
     try{
-      final data= await _localDataSource.updateOrderPayment(dineInPaymentModel);
+      final data= await _localDataSource.updateOrderPayment(paymentOrderModel, orderType);
       return  Right(data);
     }catch (error){
       return Left(ErrorHandler.handle(error).failure);
